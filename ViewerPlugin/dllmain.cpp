@@ -1,14 +1,14 @@
 ﻿#include "pch.h"
 #include <string>
+#include <sstream>
+#include <regex>
+#include "DOpusPlugin.hpp"
+#include "helper.hpp"
 #include "DOpus.hpp"
+#include "Boost/di.hpp"
 
 using namespace std;
-
-void DebugOutput(wstring str) {
-#ifdef _DEBUG
-    OutputDebugStringW((L"Ib: " + str).c_str());
-#endif // _DEBUG
-}
+namespace di = boost::di;
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
@@ -18,23 +18,107 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     switch (ul_reason_for_call)
     {
     case DLL_PROCESS_ATTACH:
+        DebugOutput(L"DLL_PROCESS_ATTACH");
+        break;
     case DLL_THREAD_ATTACH:
+        break;
     case DLL_THREAD_DETACH:
+        break;
     case DLL_PROCESS_DETACH:
+        DebugOutput(L"DLL_PROCESS_DETACH");
         break;
     }
     return TRUE;
 }
 
-#define EXPORT extern "C" __declspec(dllexport) 
+#define EXPORT extern "C" __declspec(dllexport)
+
+namespace DOpusExt {
+    using namespace DOpus;
+
+    class LogCommands {
+    public:
+        LogCommands(Command::EventExecuteCommands& event_execute_commands) {
+            event_execute_commands.callbacks.append([](Command::EventExecuteCommands::Command* cmd, uint64_t n) {
+                DebugOutput(L"START ----------------"s + to_wstring(n));
+                do {
+                    if (cmd->Command) {
+                        DebugOutput(cmd->Command);
+                    }
+                } while (cmd = cmd->Next);
+                DebugOutput(L"END ----------------");
+            });
+        }
+    };
+
+    class CommandExt {
+    public:
+        CommandExt(Command::EventExecuteCommands& event_execute_commands, Mem& mem,
+            Thumbnails::MaxSize& thumb_max_size) {
+            event_execute_commands.callbacks.append([&](Command::EventExecuteCommands::Command* cmd, uint64_t n) {
+                bool ibext = false;
+                do {
+                    if (!cmd->Command) continue; DebugOutput(cmd->Command);
+                    if (!_wcsicmp(cmd->Command, L"@ibext")) {
+                        ibext = true;
+                        cmd = cmd->Next;
+                        break;
+                    }
+                } while (cmd = cmd->Next);
+                if (!ibext) return;
+                do{
+                    if (!cmd->Command) continue; DebugOutput(cmd->Command);
+
+                    //Set MaxThumbSize
+                    static wregex reg(LR"(^Set *MaxThumbSize *= *(\d+))", regex_constants::icase);
+                    wcmatch match;
+                    if (regex_search(cmd->Command, match, reg) && match.size() > 1) {
+                        uint32_t size;
+                        wstringstream() << match.str(1) >> size;
+                        thumb_max_size.Set(size);
+                        cmd->Command[0] = L'\0';
+                    }
+
+                } while (cmd = cmd->Next);
+            });
+        }
+    };
+
+    class Main {
+    public:
+        Main(
+#ifdef _DEBUG
+            LogCommands&,
+#endif
+            CommandExt&
+        ) { }
+    };
+}
+
+static optional<DOpusExt::Main> Ext;
 
 EXPORT BOOL DVP_InitEx(DVPInitExData pInitExData) {
     DebugOutput(L"DVP_InitEx");
+    if (!Ext) {
+        Ext = di::make_injector().create<DOpusExt::Main>();
+    }
     return TRUE;
 }
 
 EXPORT void DVP_Uninit(void) {
     DebugOutput(L"DVP_Uninit");
+
+    //In order to be autoloaded and still can be unloaded by "Show flushplugins".
+    static bool first_time = true;
+    static HMODULE handle;
+    if (first_time) {
+        GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCWSTR)DVP_Uninit, &handle);
+        first_time = false;
+    }
+    else if(handle) {
+        FreeLibrary(handle);
+        handle = nullptr;
+    }
     return;
 }
 
@@ -47,7 +131,7 @@ EXPORT BOOL DVP_IdentifyW(DOpusViewerPluginInfoW* lpVPInfo) {
     DebugOutput(L"DVP_IdentifyW");
     if (lpVPInfo->cbSize < VIEWERPLUGINFILEINFOW_V4_SIZE)
         return FALSE;
-    lpVPInfo->dwFlags = DVPFIF_ExtensionsOnly
+    lpVPInfo->dwFlags = DVPFIF_ExtensionsOnly  //or DVPFIF_CatchAll
                       | DVPFIF_NoThumbnails
                       | DVPFIF_NoFileInformation
                       | DVPFIF_UseVersionResource  //only for version and copyright
