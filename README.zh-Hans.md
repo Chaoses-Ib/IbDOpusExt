@@ -4,10 +4,26 @@
 
 ## 功能
 增加命令：
-命令    |  说明 |  例子
-------- | ---- | ------
-@ibext | 开启命令扩展 | <pre lang="Batchfile">@ibext</pre>
-Set MaxThumbSize | 修改缩略图的最大尺寸 | <pre lang="Batchfile">@ibext<br />Set MaxThumbSize = 512</pre>
+<table>
+<thead><tr>
+    <th>命令</th>
+    <th>说明</th>
+    <th>例子</th>
+</tr></thead>
+<tbody>
+    <tr>
+        <td>@ibext</td>
+        <td>开启命令扩展</td>
+        <td><pre lang="Batchfile">@ibext</pre></td>
+    </tr>
+    <tr>
+        <td>Set MaxThumbSize</td>
+        <td>修改缩略图的最大尺寸</td>
+        <td><pre lang="Batchfile">@ibext
+MaxThumbSize = 512</pre></td>
+    </tr>
+</tbody>
+</table>
 
 ## 支持版本
 * Directory Opus 12.23 64位

@@ -4,10 +4,26 @@ An extension for [Directory Opus](https://www.gpsoft.com.au/).
 
 ## Features
 Add commands:
-Command | Description | Example
-------- | ----------- | -------
-@ibext | Turn on command extension | <pre lang="Batchfile">@ibext</pre>
-Set MaxThumbSize | Modify the max size of thumbnails | <pre lang="Batchfile">@ibext<br />Set MaxThumbSize = 512</pre>
+<table>
+<thead><tr>
+    <th>Command</th>
+    <th>Description</th>
+    <th>Example</th>
+</tr></thead>
+<tbody>
+    <tr>
+        <td>@ibext</td>
+        <td>Turn on command extension</td>
+        <td><pre lang="Batchfile">@ibext</pre></td>
+    </tr>
+    <tr>
+        <td>Set MaxThumbSize</td>
+        <td>Modify the max size of thumbnails</td>
+        <td><pre lang="Batchfile">@ibext
+MaxThumbSize = 512</pre></td>
+    </tr>
+</tbody>
+</table>
 
 ## Supported Version
 * Directory Opus 12.23 64-bit
