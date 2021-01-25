@@ -20,7 +20,7 @@
         <td>Set MaxThumbSize</td>
         <td>修改缩略图的最大尺寸</td>
         <td><pre lang="Batchfile">@ibext
-MaxThumbSize = 512</pre></td>
+Set MaxThumbSize = 512</pre></td>
     </tr>
 </tbody>
 </table>

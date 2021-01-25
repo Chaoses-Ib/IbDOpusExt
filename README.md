@@ -20,7 +20,7 @@ Add commands:
         <td>Set MaxThumbSize</td>
         <td>Modify the max size of thumbnails</td>
         <td><pre lang="Batchfile">@ibext
-MaxThumbSize = 512</pre></td>
+Set MaxThumbSize = 512</pre></td>
     </tr>
 </tbody>
 </table>
