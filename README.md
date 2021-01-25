@@ -4,16 +4,17 @@ An extension for [Directory Opus](https://www.gpsoft.com.au/).
 
 ## Features
 Add commands:
-Command | Example
-------- | -------
-Set MaxThumbSize | <pre lang="Batchfile">Set MaxThumbSize = 512</pre>
+Command | Description | Example
+------- | ----------- | -------
+@ibext | Turn on command extension | <pre lang="Batchfile">@ibext</pre>
+Set MaxThumbSize | Modify the max size of thumbnails | <pre lang="Batchfile">@ibext<br />Set MaxThumbSize = 512</pre>
 
 ## Supported Version
 * Directory Opus 12.23 64-bit
 
 ## Installation
 1. Put IbDOpusExt.dll into C:\Program Files\GPSoftware\Directory Opus\Viewers .
-1. Open DOpus, go Settings→Preferences→Viewer→Plugins and check IbDOpusExt.
+1. Open DOpus, go Settings→Preferences→Viewer→Plugins, check IbDOpusExt, click the OK button.
 
 ## Credits
 This project uses the following libraries:
