@@ -13,7 +13,7 @@ Set MaxThumbSize | <pre lang="Batchfile">Set MaxThumbSize = 512</pre>
 
 ## Installation
 1. Put IbDOpusExt.dll into C:\Program Files\GPSoftware\Directory Opus\Viewers .
-2. Open DOpus, go Settings→Preferences→Viewer→Plugins and check IbDOpusExt.
+1. Open DOpus, go Settings→Preferences→Viewer→Plugins and check IbDOpusExt.
 
 ## Credits
 This project uses the following libraries:
