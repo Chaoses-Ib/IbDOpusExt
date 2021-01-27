@@ -61,6 +61,7 @@ namespace DOpusExt {
                     if (!cmd->Command) continue; DebugOutput(cmd->Command);
                     if (!_wcsicmp(cmd->Command, L"@ibext")) {
                         ibext = true;
+                        cmd->Command[0] = L'\0';
                         cmd = cmd->Next;
                         break;
                     }
