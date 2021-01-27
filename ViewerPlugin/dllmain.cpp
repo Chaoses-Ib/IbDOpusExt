@@ -71,13 +71,13 @@ namespace DOpusExt {
                     if (!cmd->Command) continue; DebugOutput(cmd->Command);
 
                     //Set MaxThumbSize
-                    static wregex reg(LR"(^Set *MaxThumbSize *= *(\d+))", regex_constants::icase);
+                    static wregex reg(LR"(^ *Set +MaxThumbSize *= *(\d+))", regex_constants::icase);
                     wcmatch match;
                     if (regex_search(cmd->Command, match, reg) && match.size() > 1) {
                         uint32_t size;
                         wstringstream() << match.str(1) >> size;
                         thumb_max_size.Set(size);
-                        cmd->Command[0] = L'\0';
+                        wcscpy_s(cmd->Command, 11, L"Go Refresh");  //>=18
                     }
 
                 } while (cmd = cmd->Next);

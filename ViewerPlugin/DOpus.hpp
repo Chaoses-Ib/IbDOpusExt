@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "helper.hpp"
 #include "eventpp/callbacklist.h"
+#include "IbWinZeroProxyLib/WinZeroProxyLib.hpp"
 
 namespace DOpus {
     using eventpp::CallbackList;
@@ -27,8 +28,23 @@ namespace DOpus {
                 Pref_MaxThumbSize = prefs.base.offset(0x1488);
                 //DebugOutput(std::wstringstream() << (void*)prefs.base << L" " << Pref_MaxThumbSize);
             }
+            //Will refresh the max range of trackbars, but won't refresh buttons.
             void Set(uint32_t size) {
+                uint32_t oldsize = Get();
                 *Pref_MaxThumbSize = size;
+
+                using zp::FindWindowEx_i;
+                for (HWND lister : FindWindowEx_i(0, L"dopus.lister")) {
+                    for (HWND toolbar : FindWindowEx_i(lister, L"dopus.button.display")) {
+                        for (HWND trackbar : FindWindowEx_i(toolbar, L"dopus.trackbar")) {
+                            if (SendMessageW(trackbar, TBM_GETRANGEMIN, 0, 0) == 32
+                                && SendMessageW(trackbar, TBM_GETRANGEMAX, 0, 0) == oldsize) {
+                                SendMessageW(trackbar, TBM_SETRANGEMAX, TRUE, size);
+                            }
+                        }
+                    }
+                }
+                
             }
             uint32_t Get() {
                 return *Pref_MaxThumbSize;
