@@ -29,6 +29,7 @@ Set MaxThumbSize = 512</pre></td>
 * Directory Opus 12.23 64位
 
 ## 安装
+1. 从 [Releases](../../releases) 下载发行文件。
 1. 把 IbDOpusExt.dll 放进 C:\Program Files\GPSoftware\Directory Opus\Viewers 。
 1. 打开 DOpus，进入 设置→配置→查看器→插件，勾选 IbDOpusExt，点击“确认”按钮。
 
