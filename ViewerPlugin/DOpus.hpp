@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+#include <utility>
 #include "helper.hpp"
 #include "eventpp/callbacklist.h"
 #include "IbWinZeroProxyLib/WinZeroProxyLib.hpp"
@@ -30,8 +31,7 @@ namespace DOpus {
             }
             //Will refresh the max range of trackbars, but won't refresh buttons.
             void Set(uint32_t size) {
-                uint32_t oldsize = Get();
-                *Pref_MaxThumbSize = size;
+                uint32_t oldsize = std::exchange(*Pref_MaxThumbSize, size);
 
                 using zp::FindWindowEx_i;
                 for (HWND lister : FindWindowEx_i(0, L"dopus.lister")) {
@@ -55,6 +55,7 @@ namespace DOpus {
 
     namespace Command{
         class EventExecuteCommands {
+            //#TODO: iterator
             struct CommandLink
             {
                 CommandLink* Next;
