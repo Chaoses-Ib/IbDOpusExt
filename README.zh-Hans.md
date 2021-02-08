@@ -39,3 +39,4 @@ Set MaxThumbSize = 512</pre></td>
 * [Detours](https://github.com/microsoft/detours)
 * [[Boost::ext].DI](https://github.com/boost-ext/di)
 * [eventpp](https://github.com/wqking/eventpp)
+* [yaml-cpp](https://github.com/jbeder/yaml-cpp)

@@ -39,3 +39,4 @@ This project uses the following libraries:
 * [Detours](https://github.com/microsoft/detours)
 * [[Boost::ext].DI](https://github.com/boost-ext/di)
 * [eventpp](https://github.com/wqking/eventpp)
+* [yaml-cpp](https://github.com/jbeder/yaml-cpp)

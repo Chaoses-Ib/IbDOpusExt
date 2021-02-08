@@ -2,7 +2,7 @@
 #include <string>
 #include <optional>
 #include <functional>
-#include "Detours/detours.h"
+#include <detours/detours.h>
 #include <xmmintrin.h>
 
 using namespace std;

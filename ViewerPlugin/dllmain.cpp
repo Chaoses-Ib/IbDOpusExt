@@ -2,10 +2,11 @@
 #include <string>
 #include <sstream>
 #include <regex>
+#include <boost/di.hpp>
+#include <yaml-cpp/yaml.h>
 #include "DOpusPlugin.hpp"
 #include "helper.hpp"
 #include "DOpus.hpp"
-#include "Boost/di.hpp"
 
 using namespace std;
 namespace di = boost::di;
