@@ -3,7 +3,7 @@ Languages: [English](README.md), [简体中文](README.zh-Hans.md)
 An extension for [Directory Opus](https://www.gpsoft.com.au/).
 
 ## Features
-Add commands:
+### Add commands
 <table>
 <thead><tr>
     <th>Command</th>
@@ -24,6 +24,18 @@ Set MaxThumbSize = 512</pre></td>
     </tr>
 </tbody>
 </table>
+
+### Extra configuration
+Create /dopusdata\ConfigFiles\Plugins\IbDOpusExt\config.yaml :
+```yaml
+# YAML
+FileOperations:
+  Logging:
+    UndoLog:
+      # The max is 255
+      MaxItems: 10
+```
+(UTF-8 encoding)
 
 ## Supported Version
 * Directory Opus 12.23 64-bit

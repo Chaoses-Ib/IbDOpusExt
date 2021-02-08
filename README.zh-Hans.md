@@ -3,7 +3,7 @@
 一个 [Directory Opus](https://www.gpsoft.com.au/) 的扩展。
 
 ## 功能
-增加命令：
+### 增加命令
 <table>
 <thead><tr>
     <th>命令</th>
@@ -24,6 +24,18 @@ Set MaxThumbSize = 512</pre></td>
     </tr>
 </tbody>
 </table>
+
+### 额外配置
+创建 /dopusdata\ConfigFiles\Plugins\IbDOpusExt\config.yaml ：
+```yaml
+# YAML
+FileOperations:
+  Logging:
+    UndoLog:
+      # 最大 255
+      MaxItems: 10
+```
+（UTF-8 编码）
 
 ## 支持版本
 * Directory Opus 12.23 64位

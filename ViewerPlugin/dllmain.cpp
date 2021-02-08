@@ -2,6 +2,8 @@
 #include <string>
 #include <sstream>
 #include <regex>
+#include <filesystem>
+#include <fstream>
 #include <boost/di.hpp>
 #include <yaml-cpp/yaml.h>
 #include "DOpusPlugin.hpp"
@@ -89,11 +91,39 @@ namespace DOpusExt {
     class Main {
     public:
         Main(
+            Modules::dopus& dopus,
 #ifdef _DEBUG
             LogCommands&,
 #endif
             CommandExt&
-        ) { }
+        )
+        {
+            using namespace std::filesystem;
+            path ext_path = [] {
+                DOpusPluginHelperConfig opusconfig;
+                wchar program_dir[MAX_PATH];
+                opusconfig.GetConfigPath(OPUSPATH_CONFIG, program_dir, size(program_dir));
+                return path(program_dir) / L"IbDOpusExt";
+            }();
+
+            YAML::Node yaml;
+            path config_path = ext_path / L"config.yaml";
+
+            if (exists(config_path)) {
+                auto file = ifstream(config_path);
+                istream& s = file;
+                yaml = YAML::Load(s);
+
+                if (auto MaxItems = yaml["FileOperations"]["Logging"]["UndoLog"]["MaxItems"]) {
+                    uint32_t max_items = MaxItems.as<uint32_t>();
+                    dopus.base.offset(0x8022C6 + 5).Unprotected(1, [max_items](addr p) {
+                        *(byte_t*)p = uint8_t(max_items);
+                        return true;
+                    });
+                }
+            }
+
+        }
     };
 }
 
