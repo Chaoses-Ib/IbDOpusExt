@@ -2,8 +2,8 @@
 #include "pch.h"
 #include <utility>
 #include "helper.hpp"
-#include "eventpp/callbacklist.h"
-#include "IbWinZeroProxyLib/WinZeroProxyLib.hpp"
+#include <eventpp/callbacklist.h>
+#include <IbWinCppLib/WinCppLib.hpp>
 
 namespace DOpus {
     using eventpp::CallbackList;
@@ -33,7 +33,7 @@ namespace DOpus {
             void Set(uint32_t size) {
                 uint32_t oldsize = std::exchange(*Pref_MaxThumbSize, size);
 
-                using zp::FindWindowEx_i;
+                using ib::FindWindowEx_i;
                 for (HWND lister : FindWindowEx_i(0, L"dopus.lister")) {
                     for (HWND toolbar : FindWindowEx_i(lister, L"dopus.button.display")) {
                         for (HWND trackbar : FindWindowEx_i(toolbar, L"dopus.trackbar")) {
