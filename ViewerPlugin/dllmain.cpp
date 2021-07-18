@@ -39,51 +39,32 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 namespace DOpusExt {
     using namespace DOpus;
 
-    class LogCommands {
-    public:
-        LogCommands(Command::EventExecuteCommands& event_execute_commands) {
-            event_execute_commands.callbacks.append([](Command::EventExecuteCommands::Command* cmd, uint64_t n) {
-                DebugOutput(L"START ----------------"s + to_wstring(n));
-                do {
-                    if (cmd->Command) {
-                        DebugOutput(cmd->Command);
-                    }
-                } while (cmd = cmd->Next);
-                DebugOutput(L"END ----------------");
-            });
-        }
-    };
-
     class CommandExt {
     public:
         CommandExt(Command::EventExecuteCommands& event_execute_commands, Mem& mem,
             Thumbnails::MaxSize& thumb_max_size) {
             event_execute_commands.callbacks.append([&](Command::EventExecuteCommands::Command* cmd, uint64_t n) {
-                bool ibext = false;
+                DebugOutput(L"START ----------------"s + to_wstring(n));
                 do {
-                    if (!cmd->Command) continue; DebugOutput(cmd->Command);
-                    if (!_wcsicmp(cmd->Command, L"@ibext")) {
-                        ibext = true;
-                        cmd->Command[0] = L'\0';
-                        cmd = cmd->Next;
-                        break;
+                    if (!cmd->Command) continue;
+                    DebugOutput(cmd->Command);
+                    if (cmd->Command[0] == '#') {
+
+                        //Set MaxThumbSize
+                        static wregex reg(LR"(^ *Set +MaxThumbSize *= *(\d+))", regex_constants::icase);
+                        wcmatch match;
+                        if (regex_search(cmd->Command + 1, match, reg) && match.size() > 1) {
+                            uint32_t size;
+                            wstringstream() << match.str(1) >> size;
+                            thumb_max_size.Set(size);
+                            wcscpy_s(cmd->Command, std::size(L"Go Refresh"), L"Go Refresh");  //>=18
+                        }
+
+                        if (cmd->Command[0] != '0')
+                            DebugOutput(L"-> "s + cmd->Command);
                     }
                 } while (cmd = cmd->Next);
-                if (!ibext) return;
-                do{
-                    if (!cmd->Command) continue; DebugOutput(cmd->Command);
-
-                    //Set MaxThumbSize
-                    static wregex reg(LR"(^ *Set +MaxThumbSize *= *(\d+))", regex_constants::icase);
-                    wcmatch match;
-                    if (regex_search(cmd->Command, match, reg) && match.size() > 1) {
-                        uint32_t size;
-                        wstringstream() << match.str(1) >> size;
-                        thumb_max_size.Set(size);
-                        wcscpy_s(cmd->Command, 11, L"Go Refresh");  //>=18
-                    }
-
-                } while (cmd = cmd->Next);
+                DebugOutput(L"END ----------------");
             });
         }
     };
@@ -92,9 +73,6 @@ namespace DOpusExt {
     public:
         Main(
             Modules::dopus& dopus,
-#ifdef _DEBUG
-            LogCommands&,
-#endif
             CommandExt&
         )
         {

@@ -12,15 +12,9 @@
 </tr></thead>
 <tbody>
     <tr>
-        <td>@ibext</td>
-        <td>开启命令扩展</td>
-        <td><pre lang="Batchfile">@ibext</pre></td>
-    </tr>
-    <tr>
-        <td>Set MaxThumbSize</td>
+        <td>#Set MaxThumbSize</td>
         <td>修改缩略图的最大尺寸</td>
-        <td><pre lang="Batchfile">@ibext
-Set MaxThumbSize = 512</pre></td>
+        <td><pre lang="Batchfile">#Set MaxThumbSize = 512</pre></td>
     </tr>
 </tbody>
 </table>

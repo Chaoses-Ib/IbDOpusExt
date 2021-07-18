@@ -12,15 +12,9 @@ An extension for [Directory Opus](https://www.gpsoft.com.au/).
 </tr></thead>
 <tbody>
     <tr>
-        <td>@ibext</td>
-        <td>Turn on command extension</td>
-        <td><pre lang="Batchfile">@ibext</pre></td>
-    </tr>
-    <tr>
-        <td>Set MaxThumbSize</td>
+        <td>#Set MaxThumbSize</td>
         <td>Modify the max size of thumbnails</td>
-        <td><pre lang="Batchfile">@ibext
-Set MaxThumbSize = 512</pre></td>
+        <td><pre lang="Batchfile">#Set MaxThumbSize = 512</pre></td>
     </tr>
 </tbody>
 </table>
