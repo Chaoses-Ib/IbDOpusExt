@@ -116,9 +116,8 @@ namespace DOpusExt {
 
                 if (auto MaxItems = yaml["FileOperations"]["Logging"]["UndoLog"]["MaxItems"]) {
                     uint32_t max_items = MaxItems.as<uint32_t>();
-                    dopus.base.offset(0x8022C6 + 5).Unprotected(1, [max_items](addr p) {
-                        *(byte_t*)p = uint8_t(max_items);
-                        return true;
+                    mem::protect_changed(dopus.base.offset(0x8022C6 + 5), 1, mem::Protect::Write, [max_items](Addr p) {
+                        *(Byte*)p = uint8_t(max_items);
                     });
                 }
             }

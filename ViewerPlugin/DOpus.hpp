@@ -11,13 +11,13 @@ namespace DOpus {
     namespace Modules {
         class dopus : public Module {
         public:
-            dopus() : Module(*makeModule::CurrentProcess()) {}
+            dopus() : Module(*ModuleFactory::CurrentProcess()) {}
         };
     }
 
     class Prefs {
     public:
-        addr base;
+        Addr base;
         Prefs(Modules::dopus& dopus) : base( *((void**)dopus.base.offset(0x12BD9C0)) ) { }
     };
 
