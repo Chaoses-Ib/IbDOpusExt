@@ -3,7 +3,7 @@
 一个 [Directory Opus](https://www.gpsoft.com.au/) 的扩展。
 
 ## 功能
-### 增加命令
+### 命令
 <table>
 <thead><tr>
     <th>命令</th>
@@ -19,7 +19,7 @@
 </tbody>
 </table>
 
-### 额外配置
+### 配置
 创建 /dopusdata\ConfigFiles\Plugins\IbDOpusExt\config.yaml ：
 ```yaml
 # YAML
@@ -28,6 +28,10 @@ FileOperations:
     UndoLog:
       # 最大 255
       MaxItems: 10
+Folders:
+  FolderBehaviour:
+    # 要求 Everything 开启“索引文件夹大小”选项（位于 选项\索引）
+    GetSizesByEverything: false
 ```
 （UTF-8 编码）
 

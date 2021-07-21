@@ -4,3 +4,4 @@
 // Windows Header Files
 #include <windows.h>
 #include <Commctrl.h>
+#include <shellapi.h>

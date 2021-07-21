@@ -3,7 +3,7 @@ Languages: [English](README.md), [简体中文](README.zh-Hans.md)
 An extension for [Directory Opus](https://www.gpsoft.com.au/).
 
 ## Features
-### Add commands
+### Commands
 <table>
 <thead><tr>
     <th>Command</th>
@@ -19,7 +19,7 @@ An extension for [Directory Opus](https://www.gpsoft.com.au/).
 </tbody>
 </table>
 
-### Extra configuration
+### Configuration
 Create /dopusdata\ConfigFiles\Plugins\IbDOpusExt\config.yaml :
 ```yaml
 # YAML
@@ -28,6 +28,10 @@ FileOperations:
     UndoLog:
       # The max is 255
       MaxItems: 10
+Folders:
+  FolderBehaviour:
+    # Requires that Everything's "Index folder size" option is turned on (at Options\Indexes)
+    GetSizesByEverything: false
 ```
 (UTF-8 encoding)
 
