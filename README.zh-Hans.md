@@ -3,7 +3,7 @@
 一个 [Directory Opus](https://www.gpsoft.com.au/) 的扩展。
 
 ## 功能
-### 增加命令
+### 命令
 <table>
 <thead><tr>
     <th>命令</th>
@@ -12,20 +12,14 @@
 </tr></thead>
 <tbody>
     <tr>
-        <td>@ibext</td>
-        <td>开启命令扩展</td>
-        <td><pre lang="Batchfile">@ibext</pre></td>
-    </tr>
-    <tr>
-        <td>Set MaxThumbSize</td>
+        <td>#Set MaxThumbSize</td>
         <td>修改缩略图的最大尺寸</td>
-        <td><pre lang="Batchfile">@ibext
-Set MaxThumbSize = 512</pre></td>
+        <td><pre lang="Batchfile">#Set MaxThumbSize = 512</pre></td>
     </tr>
 </tbody>
 </table>
 
-### 额外配置
+### 配置
 创建 /dopusdata\ConfigFiles\Plugins\IbDOpusExt\config.yaml ：
 ```yaml
 # YAML
@@ -34,6 +28,10 @@ FileOperations:
     UndoLog:
       # 最大 255
       MaxItems: 10
+Folders:
+  FolderBehaviour:
+    # 要求 Everything 开启“索引文件夹大小”选项（位于 选项\索引）
+    GetSizesByEverything: false
 ```
 （UTF-8 编码）
 

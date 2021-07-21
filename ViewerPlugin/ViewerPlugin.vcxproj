@@ -200,5 +200,6 @@
   <ImportGroup Label="Dependencies">
     <Import Project="C:\L\C++\packages\IbWinCppLib\IbWinCppLib.props" />
     <Import Project="C:\L\C++\packages\eventpp\eventpp.props" />
+    <Import Project="C:\L\C++\packages\IbEverythingLib\IbEverythingLib.props" />
   </ImportGroup>
 </Project>

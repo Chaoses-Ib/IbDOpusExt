@@ -3,7 +3,7 @@ Languages: [English](README.md), [简体中文](README.zh-Hans.md)
 An extension for [Directory Opus](https://www.gpsoft.com.au/).
 
 ## Features
-### Add commands
+### Commands
 <table>
 <thead><tr>
     <th>Command</th>
@@ -12,20 +12,14 @@ An extension for [Directory Opus](https://www.gpsoft.com.au/).
 </tr></thead>
 <tbody>
     <tr>
-        <td>@ibext</td>
-        <td>Turn on command extension</td>
-        <td><pre lang="Batchfile">@ibext</pre></td>
-    </tr>
-    <tr>
-        <td>Set MaxThumbSize</td>
+        <td>#Set MaxThumbSize</td>
         <td>Modify the max size of thumbnails</td>
-        <td><pre lang="Batchfile">@ibext
-Set MaxThumbSize = 512</pre></td>
+        <td><pre lang="Batchfile">#Set MaxThumbSize = 512</pre></td>
     </tr>
 </tbody>
 </table>
 
-### Extra configuration
+### Configuration
 Create /dopusdata\ConfigFiles\Plugins\IbDOpusExt\config.yaml :
 ```yaml
 # YAML
@@ -34,6 +28,10 @@ FileOperations:
     UndoLog:
       # The max is 255
       MaxItems: 10
+Folders:
+  FolderBehaviour:
+    # Requires that Everything's "Index folder size" option is turned on (at Options\Indexes)
+    GetSizesByEverything: false
 ```
 (UTF-8 encoding)
 
