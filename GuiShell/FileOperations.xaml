@@ -1,0 +1,20 @@
+﻿<Page x:Class="GuiShell.FileOperations"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:GuiShell"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      d:Background="White"
+      Title="FileOperations">
+    <StackPanel>
+        <Expander Header="Logging" IsExpanded="True">
+            <StackPanel Orientation="Horizontal">
+                <Label>Maximum item number of undo log:</Label>
+                <TextBox x:Name="txtMaxUndoNum" MinWidth="30" MaxLines="1"></TextBox>
+                <Label>(cannot exceed 255)</Label>
+            </StackPanel>
+        </Expander>
+    </StackPanel>
+</Page>

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "pch.h"
 #include <utility>
 #include "helper.hpp"
@@ -12,7 +12,7 @@ namespace DOpus {
     namespace Modules {
         class dopus : public Module {
         public:
-            dopus() : Module(*ModuleFactory::CurrentProcess()) {}
+            dopus() : Module(ModuleFactory::CurrentProcess()) {}
         };
     }
 

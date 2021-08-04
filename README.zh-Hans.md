@@ -20,27 +20,19 @@
 </table>
 
 ### 配置
-创建 /dopusdata\ConfigFiles\Plugins\IbDOpusExt\config.yaml ：
-```yaml
-# YAML
-FileOperations:
-  Logging:
-    UndoLog:
-      # 最大 255
-      MaxItems: 10
-Folders:
-  FolderBehaviour:
-    # 要求 Everything 开启“索引文件夹大小”选项（位于 选项\索引）
-    GetSizesByEverything: false
-```
-（UTF-8 编码）
+* 文件操作
+  * 日志
+    * 撤销记录的数量上限
+* 文件夹
+  * 文件夹行为
+    * 计算文件夹尺寸时直接从 Everything 获取
 
 ## 支持版本
 * Directory Opus 12.23 64位
 
 ## 安装
-1. 从 [Releases](../../releases) 下载发行文件。
-1. 把 IbDOpusExt.dll 放进 C:\Program Files\GPSoftware\Directory Opus\Viewers 。
+1. 从 [Releases](../../releases) 下载压缩包。
+1. 解压压缩包，把文件替换进 C:\Program Files\GPSoftware\Directory Opus 。
 1. 打开 DOpus，进入 设置→配置→查看器→插件，勾选 IbDOpusExt，点击“确认”按钮。
 
 ## 鸣谢
@@ -49,4 +41,3 @@ Folders:
 * [Detours](https://github.com/microsoft/detours)
 * [[Boost::ext].DI](https://github.com/boost-ext/di)
 * [eventpp](https://github.com/wqking/eventpp)
-* [yaml-cpp](https://github.com/jbeder/yaml-cpp)

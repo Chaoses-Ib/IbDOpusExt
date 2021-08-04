@@ -20,27 +20,19 @@ An extension for [Directory Opus](https://www.gpsoft.com.au/).
 </table>
 
 ### Configuration
-Create /dopusdata\ConfigFiles\Plugins\IbDOpusExt\config.yaml :
-```yaml
-# YAML
-FileOperations:
-  Logging:
-    UndoLog:
-      # The max is 255
-      MaxItems: 10
-Folders:
-  FolderBehaviour:
-    # Requires that Everything's "Index folder size" option is turned on (at Options\Indexes)
-    GetSizesByEverything: false
-```
-(UTF-8 encoding)
+* File Operations
+  * Logging
+    * Maximum item number of undo log
+* Folders
+  * Folder Behaviour
+    * Get folder sizes from Everything when calculating them
 
 ## Supported Version
 * Directory Opus 12.23 64-bit
 
 ## Installation
-1. Download release files from [Releases](../../releases).
-1. Put IbDOpusExt.dll into C:\Program Files\GPSoftware\Directory Opus\Viewers .
+1. Download release package from [Releases](../../releases).
+1. Extract the package and put the files into C:\Program Files\GPSoftware\Directory Opus .
 1. Open DOpus, go Settings→Preferences→Viewer→Plugins, check IbDOpusExt, click the OK button.
 
 ## Credits
@@ -49,4 +41,3 @@ This project uses the following libraries:
 * [Detours](https://github.com/microsoft/detours)
 * [[Boost::ext].DI](https://github.com/boost-ext/di)
 * [eventpp](https://github.com/wqking/eventpp)
-* [yaml-cpp](https://github.com/jbeder/yaml-cpp)
