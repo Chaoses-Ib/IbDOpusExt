@@ -5,3 +5,5 @@
 #include <windows.h>
 #include <Commctrl.h>
 #include <shellapi.h>
+#include <shlwapi.h>
+#pragma comment(lib, "Shlwapi.lib")

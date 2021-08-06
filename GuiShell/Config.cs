@@ -26,8 +26,6 @@ namespace GuiShell
         {
             public class FolderBehaviourData
             {
-                [DefaultValue(false)]
-                public bool GetSizesByEverything = false;
             }
             public FolderBehaviourData FolderBehaviour = new FolderBehaviourData();
         }

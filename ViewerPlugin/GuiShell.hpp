@@ -22,7 +22,6 @@ namespace gui {
 
         struct FoldersData {
             struct FolderBehaviourData {
-                bool GetSizesByEverything;
             } FolderBehaviour;
         } Folders;
     };

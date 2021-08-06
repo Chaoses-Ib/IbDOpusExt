@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <regex>
+#include <unordered_map>
 using namespace std;
 
 #include <filesystem>
@@ -29,7 +30,106 @@ namespace DOpusExt {
         ~Main();
     };
 
-    class GetSizesByEverything {
+    class VFileGetFolderSize {
+        static inline decltype(&FindFirstFileW) FindFirstFileW_real = FindFirstFileW;
+        static inline HANDLE WINAPI FindFirstFileW_detour(
+            _In_ LPCWSTR lpFileName,
+            _Out_ LPWIN32_FIND_DATAW lpFindFileData
+        )
+        {
+            auto ends_with = [](std::wstring_view str, std::wstring_view suffix)
+            {
+                return str.size() >= suffix.size() && !str.compare(str.size() - suffix.size(), suffix.size(), suffix);
+            };
+
+            wstring_view filename(lpFileName);
+            if (filename.rfind(LR"(V:\Ib\GetFolderSize\)", 0) == 0 && ends_with(filename, LR"(\<IbVFileEnd>)")) {
+                /*
+                wstringstream ss;
+                ss << filename[std::size(LR"(V:\Ib\GetFolderSize\)") - 1] << L':' << filename.substr(std::size(LR"(V:\Ib\GetFolderSize\)") - 1 + 1);
+                wstring filename_arg = ss.str();
+                */
+                wstring filename_arg{
+                    filename.substr(
+                        LR"(V:\Ib\GetFolderSize\)"sv.size(),
+                        filename.size() - LR"(V:\Ib\GetFolderSize\)"sv.size() - LR"(\<IbVFileEnd>)"sv.size()
+                    )
+                };
+
+                if constexpr (debug_runtime)
+                    DebugOStream() << L"VFileGetFolderSize: " << lpFileName
+                    << L", " << filename_arg
+                    << L" (thread " << this_thread::get_id() << L")" << std::endl;
+
+                WIN32_FIND_DATAW* find = Addr(lpFindFileData);
+                find->dwFileAttributes = FILE_ATTRIBUTE_NORMAL;
+
+                using namespace Everythings;
+                static EverythingMT ev;
+                wstring parent(filename_arg);
+                PathRemoveFileSpecW(parent.data());  //or PathCchRemoveFileSpec
+                parent.resize(wcslen(parent.data()));
+
+                thread_local wstring last_parent;  //there may be multiple threads querying different folders at the same time
+                thread_local QueryResults results;
+                thread_local unordered_map<wstring_view, uint64_t> result_map;
+
+                if (parent != last_parent) {
+                    if constexpr (debug_runtime)
+                        DebugOStream() << L"VFileGetFolderSize: " << (LR"(folder:infolder:")"s + get_realpath(parent) + L'"')
+                        << L" (thread " << this_thread::get_id() << L")" << std::endl;
+                    results = ev.query_send(
+                        LR"(folder:infolder:")"s + get_realpath(parent) + L'"',
+                        0,
+                        Request::FileName | Request::Size
+                    ).get();
+                    last_parent = parent;
+
+                    result_map.clear();
+                    for (DWORD i = 0; i < results.available_num; i++) {
+                        result_map[results[i].get_str(Request::FileName)] = results[i].get_size();
+                    }
+                }
+
+                uint64_t size = 0;
+
+                auto it = result_map.find(PathFindFileNameW(filename_arg.data()));
+                if (it != result_map.end()) {
+                    size = it->second;
+
+                    if (!size) {
+                        wstring realpath = get_realpath(filename_arg);
+                        if (realpath != filename_arg) {
+                            if constexpr (debug_runtime)
+                                DebugOStream() << L"VFileGetFolderSize: " << (LR"(wfn:")"s + realpath + L'"')
+                                << L" (thread " << this_thread::get_id() << L")" << std::endl;
+                            QueryResults results2 = ev.query_send(
+                                LR"(wfn:")"s + realpath + L'"',
+                                0,
+                                Request::Size
+                            ).get();
+                            if (results2.found_num)
+                                size = results2[0].get_size();
+                            else
+                                ;  //ignore
+                        }
+                    }
+                }
+                else
+                    ;  //ignore
+
+                find->nFileSizeLow = (DWORD)size;
+                find->nFileSizeHigh = (DWORD)(size >> 32);
+                if constexpr (debug_runtime)
+                    DebugOStream() << L"VFileGetFolderSize: " << size << std::endl;
+
+                SetLastError(ERROR_SUCCESS);  //can't be ERROR_ACCESS_DENIED
+                return (HANDLE)1;  //can't be 0
+            }
+            return FindFirstFileW_real(lpFileName, lpFindFileData);
+        }
+
+        /*
         static inline decltype(&FindFirstFileExW) FindFirstFileExW_real = FindFirstFileExW;
         static inline HANDLE WINAPI FindFirstFileExW_detour(
             _In_ LPCWSTR lpFileName,
@@ -40,79 +140,9 @@ namespace DOpusExt {
             _In_ DWORD dwAdditionalFlags
         )
         {
-            auto ends_with = [](std::wstring_view str, std::wstring_view suffix)
-            {
-                return str.size() >= suffix.size() && !str.compare(str.size() - suffix.size(), suffix.size(), suffix);
-            };
-
-            if (hook
-                && fInfoLevelId == FindExInfoStandard && fSearchOp == FindExSearchNameMatch && dwAdditionalFlags == FIND_FIRST_EX_LARGE_FETCH
-                && ends_with(lpFileName, L"\\*"))
-            {
-                //FindClose(FindFirstFileExW_real(lpFileName, fInfoLevelId, lpFindFileData, fSearchOp, lpSearchFilter, dwAdditionalFlags));
-
-                WIN32_FIND_DATAW* find = Addr(lpFindFileData);
-                find->dwFileAttributes = FILE_ATTRIBUTE_NORMAL;
-                wcscpy_s(find->cFileName, L"#GetSizesByEverything");
-
-                using namespace Everythings;
-                static EverythingMT ev;
-                fs::path path(lpFileName);
-                fs::path folder = path.parent_path();
-                fs::path parent = folder.parent_path();
-#ifdef _DEBUG
-                static fs::path last_parent;  //there may be multiple threads querying different folders at the same time
-                static QueryResults results;
-#else
-                thread_local fs::path last_parent;  //there may be multiple threads querying different folders at the same time
-                thread_local QueryResults results;
-#endif
-                if (parent != last_parent) {
-                    DebugOutput(wstringstream() << L"GetSizesByEverything: " << (LR"(folder:infolder:")"s + get_realpath(parent.wstring()) + L'"')
-                        << L" (thread " << this_thread::get_id() << L")");
-                    results = ev.query_send(
-                        LR"(folder:infolder:")"s + get_realpath(parent.wstring()) + L'"',
-                        0,
-                        Request::FileName | Request::Size
-                    ).get();
-                    last_parent = parent;
-                }
-
-                uint64_t size = 0;
-                find->nFileSizeHigh = find->nFileSizeLow = 0;
-                for (DWORD i = 0; i < results.available_num; i++) {
-                    if (results[i].get_str(Request::FileName) == folder.filename().wstring()) {
-                        size = results[i].get_size();
-                        if (!size) {
-                            wstring realpath = get_realpath(folder.wstring());
-                            if (realpath != folder.wstring()) {
-                                DebugOutput(wstringstream() << L"GetSizesByEverything: " << (LR"(wfn:")"s + realpath + L'"')
-                                    << L" (thread " << this_thread::get_id() << L")");
-                                QueryResults results2 = ev.query_send(
-                                    LR"(wfn:")"s + realpath + L'"',
-                                    0,
-                                    Request::Size
-                                ).get();
-                                if (results2.found_num)
-                                    size = results2[0].get_size();
-                                //ignore
-                            }
-                            //ignore
-                        }
-                        break;
-                    }
-                }
-                find->nFileSizeLow = (DWORD)size;
-                find->nFileSizeHigh = (DWORD)(size >> 32);
-
-                DebugOutput(wstringstream() << L"GetSizesByEverything: " << lpFileName << ", " << find->nFileSizeLow
-                    << L" (thread " << this_thread::get_id() << L")");
-                return 0;
-            }
             return FindFirstFileExW_real(lpFileName, fInfoLevelId, lpFindFileData, fSearchOp, lpSearchFilter, dwAdditionalFlags);
         }
 
-        /*
         static inline decltype(&FindNextFileW) FindNextFileW_Real = FindNextFileW;
         static inline BOOL WINAPI FindNextFileW_Detour(
                 _In_ HANDLE hFindFile,
@@ -136,19 +166,17 @@ namespace DOpusExt {
         }
         */
     public:
-        static inline bool hook = false;
-        static inline bool enable = false;
-
-        GetSizesByEverything() {
+        VFileGetFolderSize() {
+            IbDetourAttach(&FindFirstFileW_real, FindFirstFileW_detour);
             //#TODO: transaction
-            IbDetourAttach(&FindFirstFileExW_real, FindFirstFileExW_detour);
+            //IbDetourAttach(&FindFirstFileExW_real, FindFirstFileExW_detour);
             //IbDetourAttach(&FindNextFileW_Real, FindNextFileW_Detour);
             //IbDetourAttach(&FindClose_Real, FindClose_Detour);
         }
 
-        ~GetSizesByEverything() {
-            enable = false;
-            IbDetourDetach(&FindFirstFileExW_real, FindFirstFileExW_detour);
+        ~VFileGetFolderSize() {
+            IbDetourDetach(&FindFirstFileW_real, FindFirstFileW_detour);
+            //IbDetourDetach(&FindFirstFileExW_real, FindFirstFileExW_detour);
             //IbDetourDetach(&FindNextFileW_Real, FindNextFileW_Detour);
             //IbDetourDetach(&FindClose_Real, FindClose_Detour);
         }
@@ -177,14 +205,6 @@ namespace DOpusExt {
                         continue;
                     }
                     DebugOutput(wstringstream() << cmd << L" (" << HeapSize(GetProcessHeap(), 0, node) << L")");
-
-                    //GetSizesByEverything
-                    if (GetSizesByEverything::enable && !GetSizesByEverything::hook) {
-                        if (!_wcsicmp(cmd, L"GetSizes")) {
-                            GetSizesByEverything::hook = true;
-                            cmds->push_back(L"#GetSizesByEverything _End");
-                        }
-                    }
 
                     if (cmd[0] == L'#') {
                         do {
@@ -218,21 +238,6 @@ namespace DOpusExt {
                 wstring_view params = pExecInfo->lpParameters ? wstring_view(pExecInfo->lpParameters) : wstring_view();
                 if (file[0] == L'#') {
                     file = file.substr(1);
-                    if (file == L"GetSizesByEverything" && !params.empty()) {
-                        if (params == L"On") {
-                            GetSizesByEverything::enable = true;
-                        }
-                        else if (params == L"Off") {
-                            GetSizesByEverything::enable = false;
-                        }
-                        else if (params == L"Toggle") {
-                            GetSizesByEverything::enable = !GetSizesByEverything::enable;
-                        }
-                        else if (params == L"_End") {
-                            GetSizesByEverything::hook = false;
-                        }
-                        ignore = 1;
-                    }
                 }
             });
         }
@@ -272,15 +277,10 @@ namespace DOpusExt {
         ))
     {
         injector.create<Require<CommandExt>>();
+        injector.create<Require<VFileGetFolderSize>>();
 
         if (config.FileOperations.Logging.MaxUndoNum_enable) {
             injector.create<Require<MaxUndoNum>>();
-        }
-        if (config.Folders.FolderBehaviour.GetSizesByEverything) {
-            GetSizesByEverything::enable = true;
-            injector.create<Require<GetSizesByEverything>>();
-        } else {
-            GetSizesByEverything::enable = false;
         }
     }
 

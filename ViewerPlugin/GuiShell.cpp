@@ -19,8 +19,6 @@ namespace gui {
             config.FileOperations.Logging.MaxUndoNum = config_->FileOperations->Logging->MaxUndoNum;
         }
 
-        config.Folders.FolderBehaviour.GetSizesByEverything = config_->Folders->FolderBehaviour->GetSizesByEverything;
-
         return config;
     }
 

@@ -25,7 +25,7 @@
     * 撤销记录的数量上限
 * 文件夹
   * 文件夹行为
-    * 计算文件夹尺寸时直接从 Everything 获取
+    * V:\\Ib\\GetFolderSize: 从 voidtool 的 Everything 获取文件夹尺寸
 
 ## 支持版本
 * Directory Opus 12.23 64位

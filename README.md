@@ -25,7 +25,7 @@ An extension for [Directory Opus](https://www.gpsoft.com.au/).
     * Maximum item number of undo log
 * Folders
   * Folder Behaviour
-    * Get folder sizes from Everything when calculating them
+    * V:\\Ib\\GetFolderSize: Get the folder size from voidtool's Everything
 
 ## Supported Version
 * Directory Opus 12.23 64-bit

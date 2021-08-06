@@ -23,13 +23,11 @@ namespace GuiShell
         public Folders(ConfigData.FoldersData data)
         {
             InitializeComponent();
-            checkGetSizesByEverything.IsChecked = data.FolderBehaviour.GetSizesByEverything;
         }
 
         public ConfigData.FoldersData Save()
         {
             var data = new ConfigData.FoldersData();
-            data.FolderBehaviour.GetSizesByEverything = (bool)checkGetSizesByEverything.IsChecked;
             return data;
         }
     }

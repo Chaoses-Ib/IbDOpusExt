@@ -42,7 +42,7 @@ EXPORT BOOL DVP_InitEx(DVPInitExData pInitExData) {
         path ext_path = [] {
             DOpusPluginHelperConfig opusconfig;
             wchar program_dir[MAX_PATH];
-            opusconfig.GetConfigPath(OPUSPATH_CONFIG, program_dir, size(program_dir));
+            opusconfig.GetConfigPath(OPUSPATH_CONFIG, program_dir, (UINT)size(program_dir));
             return path(program_dir) / L"IbDOpusExt";
         }();
         gui::Config::ApplyCallback = ApplyCallback;

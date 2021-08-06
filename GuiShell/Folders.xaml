@@ -11,10 +11,11 @@
     <StackPanel>
         <Expander Header="FolderBehaviour" IsExpanded="True">
             <StackPanel Orientation="Vertical" Margin="0,5,0,0">
-                <CheckBox x:Name="checkGetSizesByEverything">
+                <CheckBox IsEnabled="False" IsChecked="True">
                     <TextBlock TextWrapping="Wrap">
-                        Get folder sizes from Everything when calculating them<LineBreak/>
-                        Require that Everything's "Index folder size" option is turned on (at Options\Indexes).
+                        V:\Ib\GetFolderSize<LineBreak/>
+                        Get the folder size from voidtool's Everything.<LineBreak/>
+                        Require that Everything's "Index folder size" option (at Options\Indexes) is turned on.
                     </TextBlock>
                 </CheckBox>
             </StackPanel>
