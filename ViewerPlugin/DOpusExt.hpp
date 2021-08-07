@@ -37,13 +37,17 @@ namespace DOpusExt {
             _Out_ LPWIN32_FIND_DATAW lpFindFileData
         )
         {
-            auto ends_with = [](std::wstring_view str, std::wstring_view suffix)
-            {
-                return str.size() >= suffix.size() && !str.compare(str.size() - suffix.size(), suffix.size(), suffix);
-            };
-
             wstring_view filename(lpFileName);
-            if (filename.rfind(LR"(V:\Ib\GetFolderSize\)", 0) == 0 && ends_with(filename, LR"(\<IbVFileEnd>)")) {
+            if (filename.rfind(LR"(V:\Ib\GetFolderSize\)", 0) == 0) {
+                auto ends_with = [](std::wstring_view str, std::wstring_view suffix)
+                {
+                    return str.size() >= suffix.size() && !str.compare(str.size() - suffix.size(), suffix.size(), suffix);
+                };
+                if (!ends_with(filename, LR"(\<IbVFileEnd>)")) {
+                    //reduce time: 18us -> 5us
+                    return INVALID_HANDLE_VALUE;
+                }
+
                 /*
                 wstringstream ss;
                 ss << filename[std::size(LR"(V:\Ib\GetFolderSize\)") - 1] << L':' << filename.substr(std::size(LR"(V:\Ib\GetFolderSize\)") - 1 + 1);
@@ -80,11 +84,16 @@ namespace DOpusExt {
                         << L" (thread " << this_thread::get_id() << L")" << std::endl;
 
                     result_map.clear();
-                    results = ev.query_send(
+                    std::future<QueryResults> fut = ev.query_send(
                         LR"(folder:infolder:")"s + get_realpath(parent) + L'"',
                         0,
                         Request::FileName | Request::Size
-                    ).get();
+                    );
+                    std::future_status status = fut.wait_for(std::chrono::milliseconds(3000));
+                    if (status == std::future_status::timeout)
+                        results.available_num = 0;
+                    else
+                        results = fut.get();
                     last_parent = parent;
                     
                     for (DWORD i = 0; i < results.available_num; i++) {
@@ -93,31 +102,41 @@ namespace DOpusExt {
                 }
 
                 uint64_t size = 0;
+                if (results.available_num) {
+                    auto it = result_map.find(PathFindFileNameW(filename_arg.data()));
+                    if (it != result_map.end()) {
+                        size = it->second;
 
-                auto it = result_map.find(PathFindFileNameW(filename_arg.data()));
-                if (it != result_map.end()) {
-                    size = it->second;
+                        if (!size) {
+                            wstring realpath = get_realpath(filename_arg);
+                            if (realpath != filename_arg) {
+                                if constexpr (debug_runtime)
+                                    DebugOStream() << L"VFileGetFolderSize: " << (LR"(wfn:")"s + realpath + L'"')
+                                    << L" (thread " << this_thread::get_id() << L")" << std::endl;
+                                
+                                std::future<QueryResults> fut = ev.query_send(
+                                    LR"(wfn:")"s + realpath + L'"',
+                                    0,
+                                    Request::Size
+                                );
+                                std::future_status status = fut.wait_for(std::chrono::milliseconds(3000));
 
-                    if (!size) {
-                        wstring realpath = get_realpath(filename_arg);
-                        if (realpath != filename_arg) {
-                            if constexpr (debug_runtime)
-                                DebugOStream() << L"VFileGetFolderSize: " << (LR"(wfn:")"s + realpath + L'"')
-                                << L" (thread " << this_thread::get_id() << L")" << std::endl;
-                            QueryResults results2 = ev.query_send(
-                                LR"(wfn:")"s + realpath + L'"',
-                                0,
-                                Request::Size
-                            ).get();
-                            if (results2.available_num)
-                                size = results2[0].get_size();
-                            else
-                                ;  //ignore
+                                QueryResults results;
+                                if (status == std::future_status::timeout)
+                                    results.available_num = 0;
+                                else
+                                    results = fut.get();
+                                
+                                if (results.available_num)
+                                    size = results[0].get_size();
+                                else
+                                    ;  //ignore
+                            }
                         }
                     }
+                    else
+                        ;  //ignore
                 }
-                else
-                    ;  //ignore
 
                 find->nFileSizeLow = (DWORD)size;
                 find->nFileSizeHigh = (DWORD)(size >> 32);
