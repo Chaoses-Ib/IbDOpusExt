@@ -78,14 +78,15 @@ namespace DOpusExt {
                     if constexpr (debug_runtime)
                         DebugOStream() << L"VFileGetFolderSize: " << (LR"(folder:infolder:")"s + get_realpath(parent) + L'"')
                         << L" (thread " << this_thread::get_id() << L")" << std::endl;
+
+                    result_map.clear();
                     results = ev.query_send(
                         LR"(folder:infolder:")"s + get_realpath(parent) + L'"',
                         0,
                         Request::FileName | Request::Size
                     ).get();
                     last_parent = parent;
-
-                    result_map.clear();
+                    
                     for (DWORD i = 0; i < results.available_num; i++) {
                         result_map[results[i].get_str(Request::FileName)] = results[i].get_size();
                     }
@@ -108,7 +109,7 @@ namespace DOpusExt {
                                 0,
                                 Request::Size
                             ).get();
-                            if (results2.found_num)
+                            if (results2.available_num)
                                 size = results2[0].get_size();
                             else
                                 ;  //ignore
