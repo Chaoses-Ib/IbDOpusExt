@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "pch.h"
 #include <utility>
 #include "helper.hpp"
@@ -12,7 +12,7 @@ namespace DOpus {
     namespace Modules {
         class dopus : public Module {
         public:
-            dopus() : Module(*ModuleFactory::CurrentProcess()) {}
+            dopus() : Module(ModuleFactory::CurrentProcess()) {}
         };
     }
 
@@ -207,5 +207,36 @@ namespace DOpus {
                 IbDetourDetach(&ShellExecuteExW_real, ShellExecuteExW_detour);
             }
         };
+
+        /*
+        class VFile {
+            static inline HANDLE fake_handle = Addr(CreateFileW).align_up(4) + 1;
+
+            static inline decltype(&CreateFileW) CreateFileW_real = CreateFileW;
+            static inline HANDLE WINAPI CreateFileW_detour(
+                _In_ LPCWSTR lpFileName,
+                _In_ DWORD dwDesiredAccess,
+                _In_ DWORD dwShareMode,
+                _In_opt_ LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+                _In_ DWORD dwCreationDisposition,
+                _In_ DWORD dwFlagsAndAttributes,
+                _In_opt_ HANDLE hTemplateFile
+            )
+            {
+                if (wstring_view(lpFileName).rfind(LR"(V:\Ib\GetFolderSize\)", 0) == 0) {
+                    return fake_handle;
+                }
+                return CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+            }
+        public:
+            VFile() {
+                IbDetourAttach(&CreateFileW_real, CreateFileW_detour);
+            }
+
+            ~VFile() {
+                IbDetourDetach(&CreateFileW_real, CreateFileW_detour);
+            }
+        };
+        */
     }
 }
