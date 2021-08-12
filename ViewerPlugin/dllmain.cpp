@@ -13,14 +13,14 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     switch (ul_reason_for_call)
     {
     case DLL_PROCESS_ATTACH:
-        DebugOutput(L"DLL_PROCESS_ATTACH");
+        DebugOStream() << L"DLL_PROCESS_ATTACH" << std::endl;
         break;
     case DLL_THREAD_ATTACH:
         break;
     case DLL_THREAD_DETACH:
         break;
     case DLL_PROCESS_DETACH:
-        DebugOutput(L"DLL_PROCESS_DETACH");
+        DebugOStream() << L"DLL_PROCESS_DETACH" << std::endl;
         break;
     }
     return TRUE;
@@ -28,14 +28,14 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 
 #define EXPORT extern "C" __declspec(dllexport)
 
-static HolderB<DOpusExt::Main> dopus_ext;
+static ib::HolderB<DOpusExt::Main> dopus_ext;
 
 void ApplyCallback(gui::ConfigData&& config) {
     dopus_ext.recreate(std::move(config));
 }
 
 EXPORT BOOL DVP_InitEx(DVPInitExData pInitExData) {
-    DebugOutput(L"DVP_InitEx");
+    DebugOStream() << L"DVP_InitEx" << std::endl;
 
     if (!dopus_ext.has_created()) {
         using namespace std::filesystem;
@@ -54,7 +54,7 @@ EXPORT BOOL DVP_InitEx(DVPInitExData pInitExData) {
 }
 
 EXPORT void DVP_Uninit(void) {
-    DebugOutput(L"DVP_Uninit");
+    DebugOStream() << L"DVP_Uninit" << std::endl;
 
     //In order to be autoloaded and still can be unloaded by "Show flushplugins".
     static bool first_time = true;
@@ -73,12 +73,12 @@ EXPORT void DVP_Uninit(void) {
 }
 
 EXPORT BOOL DVP_USBSafe(OpusUSBSafeData* pUSBSafeData) {
-    DebugOutput(L"DVP_USBSafe");
+    DebugOStream() << L"DVP_USBSafe" << std::endl;
     return TRUE;
 }
 
 EXPORT BOOL DVP_IdentifyW(DOpusViewerPluginInfoW* lpVPInfo) {
-    DebugOutput(L"DVP_IdentifyW");
+    DebugOStream() << L"DVP_IdentifyW" << std::endl;
     if (lpVPInfo->cbSize < VIEWERPLUGINFILEINFOW_V4_SIZE)
         return FALSE;
     lpVPInfo->dwFlags = DVPFIF_ExtensionsOnly  //or DVPFIF_CatchAll
@@ -105,7 +105,7 @@ gui::PreferenceShow& preferences() {
 }
 
 EXPORT HWND DVP_Configure(HWND hWndParent, HWND hWndNotify, DWORD dwNotifyData) {
-    DebugOutput(L"DVP_Configure");
+    DebugOStream() << L"DVP_Configure" << std::endl;
     preferences().Show();
     return 0;
 }

@@ -1,17 +1,19 @@
-#pragma once
+﻿#pragma once
 #include <string>
 #include <optional>
 #include <functional>
+
 #include <detours/detours.h>
 #include <xmmintrin.h>
+
 #include <IbWinCppLib/WinCppLib.hpp>
+using ib::wchar, ib::Byte, ib::Addr;
+namespace mem = ib::mem;
 
-using namespace std;
-using namespace ib;
+ib::DebugOStream<> DebugOStream() {
+    return ib::DebugOStream(L"Ib: ");
+}
 
-void DebugOutput(const wchar* str);
-void DebugOutput(const wstring &str);
-void DebugOutput(const wstringstream &str);
 
 template<typename T>
 LONG IbDetourAttach(_Inout_ T* ppPointer, _In_ T pDetour) {

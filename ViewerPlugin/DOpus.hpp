@@ -10,9 +10,9 @@ namespace DOpus {
     using eventpp::CallbackList;
 
     namespace Modules {
-        class dopus : public Module {
+        class dopus : public ib::Module {
         public:
-            dopus() : Module(ModuleFactory::CurrentProcess()) {}
+            dopus() : Module(ib::ModuleFactory::CurrentProcess()) {}
         };
     }
 

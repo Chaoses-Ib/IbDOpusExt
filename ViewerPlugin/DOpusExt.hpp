@@ -60,7 +60,7 @@ namespace DOpusExt {
                     )
                 };
 
-                if constexpr (debug_runtime)
+                if constexpr (ib::debug_runtime)
                     DebugOStream() << L"VFileGetFolderSize: " << lpFileName
                     << L", " << filename_arg
                     << L" (thread " << this_thread::get_id() << L")" << std::endl;
@@ -79,13 +79,13 @@ namespace DOpusExt {
                 thread_local unordered_map<wstring_view, uint64_t> result_map;
 
                 if (parent != last_parent) {
-                    if constexpr (debug_runtime)
-                        DebugOStream() << L"VFileGetFolderSize: " << (LR"(folder:infolder:")"s + get_realpath(parent) + L'"')
+                    if constexpr (ib::debug_runtime)
+                        DebugOStream() << L"VFileGetFolderSize: " << (LR"(folder:infolder:")"s + ib::get_realpath(parent) + L'"')
                         << L" (thread " << this_thread::get_id() << L")" << std::endl;
 
                     result_map.clear();
                     std::future<QueryResults> fut = ev.query_send(
-                        LR"(folder:infolder:")"s + get_realpath(parent) + L'"',
+                        LR"(folder:infolder:")"s + ib::get_realpath(parent) + L'"',
                         0,
                         Request::FileName | Request::Size
                     );
@@ -108,9 +108,9 @@ namespace DOpusExt {
                         size = it->second;
 
                         if (!size) {
-                            wstring realpath = get_realpath(filename_arg);
+                            wstring realpath = ib::get_realpath(filename_arg);
                             if (realpath != filename_arg) {
-                                if constexpr (debug_runtime)
+                                if constexpr (ib::debug_runtime)
                                     DebugOStream() << L"VFileGetFolderSize: " << (LR"(wfn:")"s + realpath + L'"')
                                     << L" (thread " << this_thread::get_id() << L")" << std::endl;
                                 
@@ -140,7 +140,7 @@ namespace DOpusExt {
 
                 find->nFileSizeLow = (DWORD)size;
                 find->nFileSizeHigh = (DWORD)(size >> 32);
-                if constexpr (debug_runtime)
+                if constexpr (ib::debug_runtime)
                     DebugOStream() << L"VFileGetFolderSize: " << size << std::endl;
 
                 SetLastError(ERROR_SUCCESS);  //can't be ERROR_ACCESS_DENIED
@@ -215,16 +215,16 @@ namespace DOpusExt {
         ) : event_execute_commands(event_execute_commands), event_shell_execute(event_shell_execute)
         {
             event_execute_commands_handle = event_execute_commands.before.append([&](Command::CommandContainer* cmds) {
-                DebugOutput(wstringstream() << L"START ----------------" << cmds->size << L" (" << HeapSize(GetProcessHeap(), 0, cmds) << L")"
-                    << L" (thread " << this_thread::get_id() << L")");
+                DebugOStream() << L"START ----------------" << cmds->size << L" (" << HeapSize(GetProcessHeap(), 0, cmds) << L")"
+                    << L" (thread " << this_thread::get_id() << L")" << std::endl;
                 Command::CommandNode* node = cmds->head;
                 do {
                     wchar* cmd = node->command;
                     if (!cmd) {
-                        //DebugOutput(wstringstream() << L" (" << HeapSize(GetProcessHeap(), 0, node) << L")");
+                        //DebugOStream() << L" (" << HeapSize(GetProcessHeap(), 0, node) << L")") << std::endl;
                         continue;
                     }
-                    DebugOutput(wstringstream() << cmd << L" (" << HeapSize(GetProcessHeap(), 0, node) << L")");
+                    DebugOStream() << cmd << L" (" << HeapSize(GetProcessHeap(), 0, node) << L")" << std::endl;
 
                     if (cmd[0] == L'#') {
                         do {
@@ -243,16 +243,16 @@ namespace DOpusExt {
                         } while (false);
 
                         if (cmd[0] != L'\0')
-                            DebugOutput(L"-> "s + cmd);
+                            DebugOStream() << L"-> " << cmd << std::endl;
                     }
                 } while (node = node->next);
-                DebugOutput(L"END ----------------");
+                DebugOStream() << L"END ----------------" << std::endl;
             });
 
             event_shell_execute_handle = event_shell_execute.before.append([&](SHELLEXECUTEINFOW* pExecInfo, int& ignore) {
                 if (!pExecInfo->lpFile)
                     return;
-                DebugOutput(L"ShellExecute: "s + (pExecInfo->lpFile ? pExecInfo->lpFile : L"") + L" " + (pExecInfo->lpParameters ? pExecInfo->lpParameters : L""));
+                DebugOStream() << L"ShellExecute: " << (pExecInfo->lpFile ? pExecInfo->lpFile : L"") << L" " << (pExecInfo->lpParameters ? pExecInfo->lpParameters : L"") << std::endl;
 
                 wstring_view file = pExecInfo->lpFile ? wstring_view(pExecInfo->lpFile) : wstring_view();
                 wstring_view params = pExecInfo->lpParameters ? wstring_view(pExecInfo->lpParameters) : wstring_view();
