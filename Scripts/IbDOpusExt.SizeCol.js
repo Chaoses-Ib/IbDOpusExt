@@ -15,6 +15,7 @@ function OnAddColumns(addColData){
 
     col.type = "size";
 	col.autogroup = true;
+    col.autorefresh = 1;
 }
 
 function OnSize_ev(scriptColData){
