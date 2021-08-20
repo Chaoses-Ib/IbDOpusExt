@@ -1,10 +1,10 @@
 function OnInit(initData)
 {
-	initData.name = "IbDOpusExt.SizeCol";
-	initData.copyright = "Chaoses Ib";
-	initData.version = "t210806";
+    initData.name = "IbDOpusExt.SizeCol";
+    initData.copyright = "Chaoses Ib";
+    initData.version = "v0.5";
     initData.url = "https://github.com/Chaoses-Ib/IbDOpusExt"
-	initData.default_enable = true;
+    initData.default_enable = true;
 }
 
 function OnAddColumns(addColData){
@@ -14,7 +14,7 @@ function OnAddColumns(addColData){
     col.label = "Size (ev)"
 
     col.type = "size";
-	col.autogroup = true;
+    col.autogroup = true;
     col.autorefresh = 1;
 }
 
