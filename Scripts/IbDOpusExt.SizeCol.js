@@ -11,7 +11,7 @@ function OnAddColumns(addColData){
     var col = addColData.AddColumn()
     col.name = "Size_ev"
     col.method = "OnSize_ev"
-    col.label = "Size (ev)"
+    col.label = DOpus.strings.Get("column_label")
 
     col.type = "size";
     col.autogroup = true;
@@ -24,3 +24,15 @@ function OnSize_ev(scriptColData){
     else
         scriptColData.value = scriptColData.item.size
 }
+
+==SCRIPT RESOURCES
+<resources>
+    <resource type="strings">
+        <strings lang="english">
+            <string id="column_label" text="Size (ev)" />
+        </strings>
+        <strings lang="chs">
+            <string id="column_label" text="大小 (ev)" />
+        </strings>
+    </resource>
+</resources>
