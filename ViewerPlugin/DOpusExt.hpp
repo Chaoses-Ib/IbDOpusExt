@@ -68,74 +68,78 @@ namespace DOpusExt {
                 WIN32_FIND_DATAW* find = Addr(lpFindFileData);
                 find->dwFileAttributes = FILE_ATTRIBUTE_NORMAL;
 
-                using namespace Everythings;
-                static EverythingMT ev;
-                wstring parent(filename_arg);
-                PathRemoveFileSpecW(parent.data());  //or PathCchRemoveFileSpec
-                parent.resize(wcslen(parent.data()));
-
-                thread_local wstring last_parent;  //there may be multiple threads querying different folders at the same time
-                thread_local QueryResults results;
-                thread_local unordered_map<wstring_view, uint64_t> result_map;
-
-                if (parent != last_parent) {
-                    if constexpr (ib::debug_runtime)
-                        DebugOStream() << L"VFileGetFolderSize: " << (LR"(folder:infolder:")"s + ib::get_realpath(parent) + L'"')
-                        << L" (thread " << this_thread::get_id() << L")" << std::endl;
-
-                    result_map.clear();
-                    std::future<QueryResults> fut = ev.query_send(
-                        LR"(folder:infolder:")"s + ib::get_realpath(parent) + L'"',
-                        0,
-                        Request::FileName | Request::Size
-                    );
-                    std::future_status status = fut.wait_for(std::chrono::milliseconds(3000));
-                    if (status == std::future_status::timeout)
-                        results.available_num = 0;
-                    else
-                        results = fut.get();
-                    last_parent = parent;
-                    
-                    for (DWORD i = 0; i < results.available_num; i++) {
-                        result_map[results[i].get_str(Request::FileName)] = results[i].get_size();
-                    }
-                }
-
                 uint64_t size = 0;
-                if (results.available_num) {
-                    auto it = result_map.find(PathFindFileNameW(filename_arg.data()));
-                    if (it != result_map.end()) {
-                        size = it->second;
+                if (filename_arg.size() == 3) {  //R"(C:\)"
+                    GetDiskFreeSpaceExW(filename_arg.c_str(), nullptr, ib::Addr(&size), nullptr);
+                } else {
+                    using namespace Everythings;
+                    static EverythingMT ev;
+                    wstring parent(filename_arg);
+                    PathRemoveFileSpecW(parent.data());  //or PathCchRemoveFileSpec
+                    parent.resize(wcslen(parent.data()));
 
-                        if (!size) {
-                            wstring realpath = ib::get_realpath(filename_arg);
-                            if (realpath != filename_arg) {
-                                if constexpr (ib::debug_runtime)
-                                    DebugOStream() << L"VFileGetFolderSize: " << (LR"(wfn:")"s + realpath + L'"')
-                                    << L" (thread " << this_thread::get_id() << L")" << std::endl;
-                                
-                                std::future<QueryResults> fut = ev.query_send(
-                                    LR"(wfn:")"s + realpath + L'"',
-                                    0,
-                                    Request::Size
-                                );
-                                std::future_status status = fut.wait_for(std::chrono::milliseconds(3000));
+                    thread_local wstring last_parent;  //there may be multiple threads querying different folders at the same time
+                    thread_local QueryResults results;
+                    thread_local unordered_map<wstring_view, uint64_t> result_map;
 
-                                QueryResults results;
-                                if (status == std::future_status::timeout)
-                                    results.available_num = 0;
-                                else
-                                    results = fut.get();
-                                
-                                if (results.available_num)
-                                    size = results[0].get_size();
-                                else
-                                    ;  //ignore
-                            }
+                    if (parent != last_parent) {
+                        if constexpr (ib::debug_runtime)
+                            DebugOStream() << L"VFileGetFolderSize: " << (LR"(folder:infolder:")"s + ib::get_realpath(parent) + L'"')
+                            << L" (thread " << this_thread::get_id() << L")" << std::endl;
+
+                        result_map.clear();
+                        std::future<QueryResults> fut = ev.query_send(
+                            LR"(folder:infolder:")"s + ib::get_realpath(parent) + L'"',
+                            0,
+                            Request::FileName | Request::Size
+                        );
+                        std::future_status status = fut.wait_for(std::chrono::milliseconds(3000));
+                        if (status == std::future_status::timeout)
+                            results.available_num = 0;
+                        else
+                            results = fut.get();
+                        last_parent = parent;
+
+                        for (DWORD i = 0; i < results.available_num; i++) {
+                            result_map[results[i].get_str(Request::FileName)] = results[i].get_size();
                         }
                     }
-                    else
-                        ;  //ignore
+                    
+                    if (results.available_num) {
+                        auto it = result_map.find(PathFindFileNameW(filename_arg.data()));
+                        if (it != result_map.end()) {
+                            size = it->second;
+
+                            if (!size) {
+                                wstring realpath = ib::get_realpath(filename_arg);
+                                if (realpath != filename_arg) {
+                                    if constexpr (ib::debug_runtime)
+                                        DebugOStream() << L"VFileGetFolderSize: " << (LR"(wfn:")"s + realpath + L'"')
+                                        << L" (thread " << this_thread::get_id() << L")" << std::endl;
+
+                                    std::future<QueryResults> fut = ev.query_send(
+                                        LR"(wfn:")"s + realpath + L'"',
+                                        0,
+                                        Request::Size
+                                    );
+                                    std::future_status status = fut.wait_for(std::chrono::milliseconds(3000));
+
+                                    QueryResults results;
+                                    if (status == std::future_status::timeout)
+                                        results.available_num = 0;
+                                    else
+                                        results = fut.get();
+
+                                    if (results.available_num)
+                                        size = results[0].get_size();
+                                    else
+                                        ;  //ignore
+                                }
+                            }
+                        }
+                        else
+                            ;  //ignore
+                    }
                 }
 
                 find->nFileSizeLow = (DWORD)size;

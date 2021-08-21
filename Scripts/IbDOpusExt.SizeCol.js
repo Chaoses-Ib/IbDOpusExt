@@ -19,7 +19,7 @@ function OnAddColumns(addColData){
 }
 
 function OnSize_ev(scriptColData){
-    if(scriptColData.item.is_dir)
+    if(scriptColData.item.got_size)
         scriptColData.value = DOpus.FSUtil.GetItem("V:\\Ib\\GetFolderSize\\" + scriptColData.item + "\\<IbVFileEnd>").size
     else
         scriptColData.value = scriptColData.item.size
