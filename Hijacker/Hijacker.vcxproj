@@ -176,7 +176,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="export.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -189,5 +188,6 @@
   </ImportGroup>
   <ImportGroup Label="Dependencies">
     <Import Project="C:\L\C++\packages\IbWinCppLib\IbWinCppLib.props" />
+    <Import Project="C:\L\C++\packages\IbDllHijackLib\IbDllHijackLib.props" />
   </ImportGroup>
 </Project>

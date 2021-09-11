@@ -39,5 +39,6 @@
 * [[Boost::ext].DI](https://github.com/boost-ext/di)
 * [Detours](https://github.com/microsoft/detours)
 * [eventpp](https://github.com/wqking/eventpp)
+* [IbDllHijackLib](https://github.com/Chaoses-Ib/IbDllHijackLib)
 * [IbEverythingLib](https://github.com/Chaoses-Ib/IbEverythingLib)
 * [IbWinCppLib](https://github.com/Chaoses-Ib/IbWinCppLib)
