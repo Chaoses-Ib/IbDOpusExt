@@ -1,4 +1,4 @@
-function OnInit(initData)
+﻿function OnInit(initData)
 {
     initData.name = "IbDOpusExt.SizeCol";
     initData.copyright = "Chaoses Ib";
