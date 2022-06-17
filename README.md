@@ -30,15 +30,5 @@ An extension for [Directory Opus](https://www.gpsoft.com.au/).
 
 ## Installation
 1. Download release package from [Releases](../../releases).
-1. Extract the package and put the files into `C:\Program Files\GPSoftware\Directory Opus` .
-1. Open DOpus, go Settings→Preferences→Viewer→Plugins, check IbDOpusExt, click the Apply button.
-
-## Credits
-This project uses the following libraries:
-
-* [[Boost::ext].DI](https://github.com/boost-ext/di)
-* [Detours](https://github.com/microsoft/detours)
-* [eventpp](https://github.com/wqking/eventpp)
-* [IbDllHijackLib](https://github.com/Chaoses-Ib/IbDllHijackLib)
-* [IbEverythingLib](https://github.com/Chaoses-Ib/IbEverythingLib)
-* [IbWinCppLib](https://github.com/Chaoses-Ib/IbWinCppLib)
+2. Extract the package and put the files into `C:\Program Files\GPSoftware\Directory Opus` .
+3. Open DOpus, go Settings→Preferences→Viewer→Plugins, check IbDOpusExt, click the Apply button.

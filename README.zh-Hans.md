@@ -30,15 +30,5 @@
 
 ## 安装
 1. 从 [Releases](../../releases) 下载压缩包。
-1. 解压压缩包，把文件替换进 `C:\Program Files\GPSoftware\Directory Opus` 。
-1. 打开 DOpus，进入 设置→配置→查看器→插件，勾选 IbDOpusExt，点击“应用”按钮。
-
-## 鸣谢
-本项目使用了以下库：
-
-* [[Boost::ext].DI](https://github.com/boost-ext/di)
-* [Detours](https://github.com/microsoft/detours)
-* [eventpp](https://github.com/wqking/eventpp)
-* [IbDllHijackLib](https://github.com/Chaoses-Ib/IbDllHijackLib)
-* [IbEverythingLib](https://github.com/Chaoses-Ib/IbEverythingLib)
-* [IbWinCppLib](https://github.com/Chaoses-Ib/IbWinCppLib)
+2. 解压压缩包，把文件替换进 `C:\Program Files\GPSoftware\Directory Opus` 。
+3. 打开 DOpus，进入 设置→配置→查看器→插件，勾选 IbDOpusExt，点击“应用”按钮。
