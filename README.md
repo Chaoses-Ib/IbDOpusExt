@@ -25,8 +25,8 @@ An extension for [Directory Opus](https://www.gpsoft.com.au/).
 ## Requirements
 * Windows 10 or later
 * Directory Opus v12.23 x64
-* [.NET 5 Runtime](https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-5.0.8-windows-x64-installer)
-* [VC++ 2019 Runtime x64](https://support.microsoft.com/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0)
+* [.NET 6 Runtime](https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-6.0.6-windows-x64-installer)
+* [VC++ 2022 x64 Runtime](https://aka.ms/vs/17/release/vc_redist.x64.exe)
 
 ## Installation
 1. Download release package from [Releases](../../releases).

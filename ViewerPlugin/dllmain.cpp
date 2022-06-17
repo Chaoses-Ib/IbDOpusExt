@@ -37,7 +37,7 @@ void ApplyCallback(gui::ConfigData&& config) {
 EXPORT BOOL DVP_InitEx(DVPInitExData pInitExData) {
     DebugOStream() << L"DVP_InitEx" << std::endl;
 
-    if (!dopus_ext.has_created()) {
+    if (!dopus_ext.created()) {
         using namespace std::filesystem;
         path ext_path = [] {
             DOpusPluginHelperConfig opusconfig;

@@ -3,7 +3,7 @@
 #include <utility>
 #include "helper.hpp"
 #include <eventpp/callbacklist.h>
-#include <IbWinCppLib/WinCppLib.hpp>
+#include <IbWinCpp/WinCpp.hpp>
 #include <list>
 
 namespace DOpus {
@@ -12,7 +12,7 @@ namespace DOpus {
     namespace Modules {
         class dopus : public ib::Module {
         public:
-            dopus() : Module(ib::ModuleFactory::CurrentProcess()) {}
+            dopus() : Module(ib::ModuleFactory::current_process()) {}
         };
     }
 

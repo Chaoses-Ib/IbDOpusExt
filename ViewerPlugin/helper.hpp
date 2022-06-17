@@ -6,7 +6,7 @@
 #include <detours/detours.h>
 #include <xmmintrin.h>
 
-#include <IbWinCppLib/WinCppLib.hpp>
+#include <IbWinCpp/WinCpp.hpp>
 using ib::wchar, ib::Byte, ib::Addr;
 namespace mem = ib::mem;
 

@@ -12,7 +12,7 @@ namespace fs = std::filesystem;
 #include <boost/di/extension/scopes/shared.hpp>
 namespace di = boost::di;
 
-#include <IbEverythingLib/Everything.hpp>
+#include <IbEverything/Everything.hpp>
 
 #include "DOpus.hpp"
 #include "GuiShell.hpp"
@@ -84,12 +84,12 @@ namespace DOpusExt {
 
                     if (parent != last_parent) {
                         if constexpr (ib::debug_runtime)
-                            DebugOStream() << L"VFileGetFolderSize: " << (LR"(folder:infolder:")"s + ib::get_realpath(parent) + L'"')
+                            DebugOStream() << L"VFileGetFolderSize: " << (LR"(folder:infolder:")"s + ib::path_to_realpath(parent) + L'"')
                             << L" (thread " << this_thread::get_id() << L")" << std::endl;
 
                         result_map.clear();
                         std::future<QueryResults> fut = ev.query_send(
-                            LR"(folder:infolder:")"s + ib::get_realpath(parent) + L'"',
+                            LR"(folder:infolder:")"s + ib::path_to_realpath(parent) + L'"',
                             0,
                             Request::FileName | Request::Size
                         );
@@ -111,7 +111,7 @@ namespace DOpusExt {
                             size = it->second;
 
                             if (!size) {
-                                wstring realpath = ib::get_realpath(filename_arg);
+                                wstring realpath = ib::path_to_realpath(filename_arg);
                                 if (realpath != filename_arg) {
                                     if constexpr (ib::debug_runtime)
                                         DebugOStream() << L"VFileGetFolderSize: " << (LR"(wfn:")"s + realpath + L'"')
@@ -277,6 +277,7 @@ namespace DOpusExt {
         Modules::dopus& dopus;
     public:
         MaxUndoNum(Main& main, Modules::dopus& dopus) : dopus(dopus) {
+            DebugOStream() << L"MaxUndoNum: " << main.config.FileOperations.Logging.MaxUndoNum << std::endl;
             mem::protect_changed(dopus.base.offset(0x8022C6 + 5), 1, mem::Protect::Write, [&main](Addr p) {
                 *(Byte*)p = main.config.FileOperations.Logging.MaxUndoNum;
             });

@@ -25,8 +25,8 @@
 ## 安装要求
 * Windows 10 及以上
 * Directory Opus v12.23 x64
-* [.NET 5 运行时](https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-5.0.8-windows-x64-installer)
-* [VC++ 2019 运行时 x64](https://support.microsoft.com/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0)
+* [.NET 6 运行时](https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-6.0.6-windows-x64-installer)
+* [VC++ 2022 x64 运行时](https://aka.ms/vs/17/release/vc_redist.x64.exe)
 
 ## 安装
 1. 从 [Releases](../../releases) 下载压缩包。
