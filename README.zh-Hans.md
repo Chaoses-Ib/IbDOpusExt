@@ -14,7 +14,8 @@
 * 文件夹
   * 文件夹行为
     * Everything 尺寸列  
-      通过 voidtool 的 [Everything](https://www.voidtools.com/) 即时显示文件夹尺寸。
+      通过 voidtool 的 [Everything](https://www.voidtools.com/) 即时显示文件夹尺寸：  
+      ![](docs/images/SizeCol.png)
 * 查看器
   * 插件
     * 修复插件依赖加载问题

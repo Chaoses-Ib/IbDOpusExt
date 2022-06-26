@@ -14,7 +14,8 @@ An extension for [Directory Opus](https://www.gpsoft.com.au/).
 * Folders
   * Folder Behaviour
     * Size column via Everything  
-      Display folder sizes instantly with voidtool's [Everything](https://www.voidtools.com/).
+      Display folder sizes instantly with voidtool's [Everything](https://www.voidtools.com/):  
+      ![](docs/images/SizeCol.png)
 * Viewer
   * Plugins
     * Fix dependency loading bug for plugins
