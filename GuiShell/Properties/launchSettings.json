@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "GuiShell": {
-      "commandName": "Project",
-      "nativeDebugging": true
-    }
-  }
-}
