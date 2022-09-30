@@ -38,6 +38,7 @@ _Ret_maybenull_ HMODULE WINAPI LoadLibraryW_detour(_In_ LPCWSTR lpLibFileName)
         return LoadLibraryW_true(lpLibFileName);
 }
 
+// See docs for details
 #include <IbDllHijack/dlls/version.h>
 
 BOOL APIENTRY DllMain( HMODULE hModule,
