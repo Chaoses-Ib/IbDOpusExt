@@ -21,7 +21,7 @@ namespace DOpusExt {
     using namespace DOpus;
 
     class Main {
-        di::injector<di::extension::shared_config> injector;
+        di::core::injector<di::extension::shared_config, di::core::pool_t<>> injector;
     public:
         gui::ConfigData config;
 
