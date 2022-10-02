@@ -3,16 +3,17 @@
 #include <utility>
 #include "helper.hpp"
 #include <eventpp/callbacklist.h>
-#include <IbWinCppLib/WinCppLib.hpp>
+#include <IbWinCpp/WinCpp.hpp>
 #include <list>
+#include "sigmatch.hpp"
 
 namespace DOpus {
     using eventpp::CallbackList;
 
     namespace Modules {
-        class dopus : public Module {
+        class dopus : public ib::Module {
         public:
-            dopus() : Module(ModuleFactory::CurrentProcess()) {}
+            dopus() : Module(ib::ModuleFactory::current_process()) {}
         };
     }
 
@@ -48,7 +49,7 @@ namespace DOpus {
     class Prefs {
     public:
         Addr base;
-        Prefs(Modules::dopus& dopus) : base( *((void**)dopus.base.offset(0x12BD9C0)) ) { }
+        Prefs(Modules::dopus& dopus) : base( *((void**)sigmatch_Prefs()) ) { }
     };
 
     namespace Thumbnails {
@@ -56,7 +57,7 @@ namespace DOpus {
             uint32_t* Pref_MaxThumbSize;
         public:
             MaxSize(Prefs& prefs) {
-                Pref_MaxThumbSize = prefs.base.offset(0x1488);
+                Pref_MaxThumbSize = prefs.base.offset(sigmatch_MaxThumbSize());
                 //DebugOutput(std::wstringstream() << (void*)prefs.base << L" " << Pref_MaxThumbSize);
             }
             //Will refresh the max range of trackbars, but won't refresh buttons.
@@ -162,7 +163,7 @@ namespace DOpus {
         public:
             static inline CallbackList<void(CommandContainer* cmd)> before;
             EventExecuteCommands(Modules::dopus& dopus) {
-                RunCommandB4_True = dopus.base.offset(0x49E9E0);
+                RunCommandB4_True = sigmatch_RunCommandB4_True();
                 IbDetourAttach(&RunCommandB4_True, RunCommandB4_TrueDetour);
             }
             ~EventExecuteCommands() {

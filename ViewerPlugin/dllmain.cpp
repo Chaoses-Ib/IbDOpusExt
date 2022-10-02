@@ -13,14 +13,14 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     switch (ul_reason_for_call)
     {
     case DLL_PROCESS_ATTACH:
-        DebugOutput(L"DLL_PROCESS_ATTACH");
+        DebugOStream() << L"DLL_PROCESS_ATTACH" << std::endl;
         break;
     case DLL_THREAD_ATTACH:
         break;
     case DLL_THREAD_DETACH:
         break;
     case DLL_PROCESS_DETACH:
-        DebugOutput(L"DLL_PROCESS_DETACH");
+        DebugOStream() << L"DLL_PROCESS_DETACH" << std::endl;
         break;
     }
     return TRUE;
@@ -28,16 +28,20 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 
 #define EXPORT extern "C" __declspec(dllexport)
 
-static HolderB<DOpusExt::Main> dopus_ext;
+static ib::HolderB<DOpusExt::Main> dopus_ext;
+
+DVPInitExData dvp_init_data;
 
 void ApplyCallback(gui::ConfigData&& config) {
     dopus_ext.recreate(std::move(config));
 }
 
-EXPORT BOOL DVP_InitEx(DVPInitExData pInitExData) {
-    DebugOutput(L"DVP_InitEx");
+EXPORT BOOL DVP_InitEx(DVPInitExData* pInitExData) {
+    DebugOStream() << L"DVP_InitEx" << std::endl;
 
-    if (!dopus_ext.has_created()) {
+    dvp_init_data = *pInitExData;
+
+    if (!dopus_ext.created()) {
         using namespace std::filesystem;
         path ext_path = [] {
             DOpusPluginHelperConfig opusconfig;
@@ -54,12 +58,14 @@ EXPORT BOOL DVP_InitEx(DVPInitExData pInitExData) {
 }
 
 EXPORT void DVP_Uninit(void) {
-    DebugOutput(L"DVP_Uninit");
+    DebugOStream() << L"DVP_Uninit" << std::endl;
 
     //In order to be autoloaded and still can be unloaded by "Show flushplugins".
     static bool first_time = true;
     static HMODULE handle;
     if (first_time) {
+        if constexpr (debug)
+            DebugOStream() << L"first_time" << std::endl;
         GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCWSTR)DVP_Uninit, &handle);
         first_time = false;
     }
@@ -67,18 +73,20 @@ EXPORT void DVP_Uninit(void) {
         FreeLibrary(handle);
         handle = nullptr;
 
+        if constexpr (debug)
+            DebugOStream() << L"dopus_ext.destroy()" << std::endl;
         dopus_ext.destroy();
     }
     return;
 }
 
 EXPORT BOOL DVP_USBSafe(OpusUSBSafeData* pUSBSafeData) {
-    DebugOutput(L"DVP_USBSafe");
+    DebugOStream() << L"DVP_USBSafe" << std::endl;
     return TRUE;
 }
 
 EXPORT BOOL DVP_IdentifyW(DOpusViewerPluginInfoW* lpVPInfo) {
-    DebugOutput(L"DVP_IdentifyW");
+    DebugOStream() << L"DVP_IdentifyW" << std::endl;
     if (lpVPInfo->cbSize < VIEWERPLUGINFILEINFOW_V4_SIZE)
         return FALSE;
     lpVPInfo->dwFlags = DVPFIF_ExtensionsOnly  //or DVPFIF_CatchAll
@@ -105,7 +113,7 @@ gui::PreferenceShow& preferences() {
 }
 
 EXPORT HWND DVP_Configure(HWND hWndParent, HWND hWndNotify, DWORD dwNotifyData) {
-    DebugOutput(L"DVP_Configure");
+    DebugOStream() << L"DVP_Configure" << std::endl;
     preferences().Show();
     return 0;
 }

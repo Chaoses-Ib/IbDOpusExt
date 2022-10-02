@@ -1,17 +1,24 @@
-#pragma once
+﻿#pragma once
 #include <string>
 #include <optional>
 #include <functional>
+
 #include <detours/detours.h>
 #include <xmmintrin.h>
-#include <IbWinCppLib/WinCppLib.hpp>
 
-using namespace std;
-using namespace ib;
+#include <IbWinCpp/WinCpp.hpp>
+using ib::wchar, ib::Byte, ib::Addr;
+namespace mem = ib::mem;
 
-void DebugOutput(const wchar* str);
-void DebugOutput(const wstring &str);
-void DebugOutput(const wstringstream &str);
+#include "DOpusPlugin.hpp"
+extern DVPInitExData dvp_init_data;
+
+constexpr bool debug = !ib::macro::ndebug;
+
+inline ib::DebugOStream<> DebugOStream() {
+    return ib::DebugOStream(L"Ib: ");
+}
+
 
 template<typename T>
 LONG IbDetourAttach(_Inout_ T* ppPointer, _In_ T pDetour) {

@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include <detours/detours.h>
-#include <IbWinCppLib/WinCppLib.hpp>
+#include <IbWinCpp/WinCpp.hpp>
 
 template<typename T>
 LONG IbDetourAttach(_Inout_ T* ppPointer, _In_ T pDetour) {
@@ -37,6 +37,9 @@ _Ret_maybenull_ HMODULE WINAPI LoadLibraryW_detour(_In_ LPCWSTR lpLibFileName)
     else
         return LoadLibraryW_true(lpLibFileName);
 }
+
+// See docs for details
+#include <IbDllHijack/dlls/version.h>
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
