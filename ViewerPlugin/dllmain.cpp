@@ -64,6 +64,8 @@ EXPORT void DVP_Uninit(void) {
     static bool first_time = true;
     static HMODULE handle;
     if (first_time) {
+        if constexpr (debug)
+            DebugOStream() << L"first_time" << std::endl;
         GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCWSTR)DVP_Uninit, &handle);
         first_time = false;
     }
@@ -71,6 +73,8 @@ EXPORT void DVP_Uninit(void) {
         FreeLibrary(handle);
         handle = nullptr;
 
+        if constexpr (debug)
+            DebugOStream() << L"dopus_ext.destroy()" << std::endl;
         dopus_ext.destroy();
     }
     return;

@@ -71,6 +71,9 @@
     <ClCompile Include="sigmatch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DOpusExt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ViewerPlugin.rc">
