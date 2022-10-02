@@ -21,6 +21,8 @@
             </TreeViewItem>
             <TreeViewItem x:Name="Folders" Header="Folders" IsExpanded="True" Selected="Folders_Selected">
             </TreeViewItem>
+            <TreeViewItem x:Name="About" Header="About" IsExpanded="True" Selected="About_Selected">
+            </TreeViewItem>
         </TreeView>
         <Frame x:Name="Frame" Grid.Row="0" Grid.Column="1" NavigationUIVisibility="Hidden" />
 

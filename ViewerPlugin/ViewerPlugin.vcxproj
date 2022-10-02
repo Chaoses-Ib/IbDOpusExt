@@ -197,6 +197,7 @@
     <ClInclude Include="helper.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="resource1.h" />
     <ClInclude Include="sigmatch.hpp" />
   </ItemGroup>
   <ItemGroup>

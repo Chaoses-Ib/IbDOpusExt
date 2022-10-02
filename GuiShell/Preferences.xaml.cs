@@ -52,6 +52,7 @@ namespace GuiShell
         ConfigData config;
         FileOperations fileOperations;
         Folders folders;
+        About about;
 
         public Preferences()
         {
@@ -60,6 +61,7 @@ namespace GuiShell
             config = Config.Read();
             fileOperations = new FileOperations(config.FileOperations);
             folders = new Folders(config.Folders);
+            about = new About();
 
             Frame.Navigate(fileOperations);
         }
@@ -79,6 +81,11 @@ namespace GuiShell
         private void Folders_Selected(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(folders);
+        }
+
+        private void About_Selected(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(about);
         }
 
         void Apply()
