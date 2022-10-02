@@ -30,12 +30,16 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 
 static ib::HolderB<DOpusExt::Main> dopus_ext;
 
+DVPInitExData dvp_init_data;
+
 void ApplyCallback(gui::ConfigData&& config) {
     dopus_ext.recreate(std::move(config));
 }
 
-EXPORT BOOL DVP_InitEx(DVPInitExData pInitExData) {
+EXPORT BOOL DVP_InitEx(DVPInitExData* pInitExData) {
     DebugOStream() << L"DVP_InitEx" << std::endl;
+
+    dvp_init_data = *pInitExData;
 
     if (!dopus_ext.created()) {
         using namespace std::filesystem;

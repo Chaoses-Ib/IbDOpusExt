@@ -51,6 +51,9 @@
     <ClInclude Include="DOpus.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sigmatch.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -62,10 +65,17 @@
     <ClCompile Include="GuiShell.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sigmatch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ViewerPlugin.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\README.md" />
+    <None Include="..\README.zh-Hans.md" />
   </ItemGroup>
 </Project>

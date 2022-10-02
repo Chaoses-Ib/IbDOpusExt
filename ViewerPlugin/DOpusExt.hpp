@@ -16,6 +16,7 @@ namespace di = boost::di;
 
 #include "DOpus.hpp"
 #include "GuiShell.hpp"
+#include "helper.hpp"
 
 namespace DOpusExt {
     using namespace DOpus;
@@ -277,15 +278,20 @@ namespace DOpusExt {
         Modules::dopus& dopus;
     public:
         MaxUndoNum(Main& main, Modules::dopus& dopus) : dopus(dopus) {
-            DebugOStream() << L"MaxUndoNum: " << main.config.FileOperations.Logging.MaxUndoNum << std::endl;
-            mem::protect_changed(dopus.base.offset(0x8022C6 + 5), 1, mem::Protect::Write, [&main](Addr p) {
-                *(Byte*)p = main.config.FileOperations.Logging.MaxUndoNum;
-            });
+            if (dvp_init_data.dwOpusVerMajor == 12 && dvp_init_data.dwOpusVerMinor == 23) {
+                DebugOStream() << L"MaxUndoNum: " << main.config.FileOperations.Logging.MaxUndoNum << std::endl;
+
+                mem::protect_changed(dopus.base.offset(0x8022C6 + 5), 1, mem::Protect::Write, [&main](Addr p) {
+                    *(Byte*)p = main.config.FileOperations.Logging.MaxUndoNum;
+                });
+            }
         }
         ~MaxUndoNum() {
-            mem::protect_changed(dopus.base.offset(0x8022C6 + 5), 1, mem::Protect::Write, [](Addr p) {
-                *(Byte*)p = 10;
-            });
+            if (dvp_init_data.dwOpusVerMajor == 12 && dvp_init_data.dwOpusVerMinor == 23) {
+                mem::protect_changed(dopus.base.offset(0x8022C6 + 5), 1, mem::Protect::Write, [](Addr p) {
+                    *(Byte*)p = 10;
+                });
+            }
         }
     };
 

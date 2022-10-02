@@ -15,4 +15,8 @@ FetchContent_Declare(IbEverything
     GIT_REPOSITORY https://github.com/Chaoses-Ib/IbEverythingLib.git
     GIT_TAG        0fda1b6a2db79112b08ebdfb1443a84959ddc042
 )
-FetchContent_MakeAvailable(IbWinCpp IbDllHijack IbEverything)
+FetchContent_Declare(sigmatch
+    GIT_REPOSITORY https://github.com/SpriteOvO/sigmatch.git
+    GIT_TAG        2ca983dc0cb78fe4f4406b67655e7ee132ecf5da
+)
+FetchContent_MakeAvailable(IbWinCpp IbDllHijack IbEverything sigmatch)

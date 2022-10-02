@@ -10,7 +10,7 @@ An extension for [Directory Opus](https://www.gpsoft.com.au/).
       e.g. `#Set MaxThumbSize = 512`
 * File Operations
   * Logging
-    * Configure maximum item number of undo log
+    * Configure maximum item number of undo log (v12.23 only)
 * Folders
   * Folder Behaviour
     * Size column via Everything  
@@ -25,7 +25,8 @@ An extension for [Directory Opus](https://www.gpsoft.com.au/).
 
 ## Requirements
 * Windows 10 or later
-* Directory Opus v12.23 x64
+* Directory Opus x64  
+  Tested on v12.29 and v12.23.
 * [.NET 6 Runtime](https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-6.0.6-windows-x64-installer)
 * [VC++ 2022 x64 Runtime](https://aka.ms/vs/17/release/vc_redist.x64.exe)
 

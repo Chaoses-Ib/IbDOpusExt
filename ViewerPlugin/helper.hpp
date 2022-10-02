@@ -10,7 +10,12 @@
 using ib::wchar, ib::Byte, ib::Addr;
 namespace mem = ib::mem;
 
-ib::DebugOStream<> DebugOStream() {
+#include "DOpusPlugin.hpp"
+extern DVPInitExData dvp_init_data;
+
+constexpr bool debug = !ib::macro::ndebug;
+
+inline ib::DebugOStream<> DebugOStream() {
     return ib::DebugOStream(L"Ib: ");
 }
 

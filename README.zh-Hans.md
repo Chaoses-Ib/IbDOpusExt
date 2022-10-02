@@ -10,7 +10,7 @@
       例如：`#Set MaxThumbSize = 512`
 * 文件操作
   * 日志
-    * 配置撤销记录的最大数量
+    * 配置撤销记录的最大数量（仅 v12.23）
 * 文件夹
   * 文件夹行为
     * Everything 尺寸列  
@@ -25,7 +25,8 @@
 
 ## 安装要求
 * Windows 10 及以上
-* Directory Opus v12.23 x64
+* Directory Opus x64  
+  已在 v12.29 和 v12.23 下测试。
 * [.NET 6 运行时](https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-6.0.6-windows-x64-installer)
 * [VC++ 2022 x64 运行时](https://aka.ms/vs/17/release/vc_redist.x64.exe)
 

@@ -13,7 +13,7 @@
             <StackPanel Orientation="Horizontal">
                 <Label>Maximum item number of undo log:</Label>
                 <TextBox x:Name="txtMaxUndoNum" MinWidth="30" MaxLines="1"></TextBox>
-                <Label>(cannot exceed 255)</Label>
+                <Label>(cannot exceed 255) (v12.23 only)</Label>
             </StackPanel>
         </Expander>
     </StackPanel>
